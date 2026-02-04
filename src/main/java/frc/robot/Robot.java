@@ -16,9 +16,13 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.components.Controller;
 import frc.robot.components.DriveFrame;
 import frc.robot.data.StickPosition;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+
+import java.util.List;
 
 import org.photonvision.PhotonCamera;
 import org.photonvision.PhotonPoseEstimator;
+import org.photonvision.targeting.PhotonPipelineResult;
 
 public class Robot extends TimedRobot {
   private static final String kDefaultAuto = "Default";
@@ -39,12 +43,24 @@ public class Robot extends TimedRobot {
   public Robot() {
     controller = new Controller();
     driveFrame = new DriveFrame();
-
-    System.out.println(poseEstimator);
   }
 
+  int counter = 0;
+
   @Override
-  public void robotPeriodic() {}
+  public void robotPeriodic() {
+    List<PhotonPipelineResult> result = frontCamera.getAllUnreadResults();
+    
+    for (PhotonPipelineResult i : result) {
+      poseEstimator.update(i);
+      counter++;
+    }
+
+    if (counter % 20 == 0) {
+      //SmartDashboard.putData(poseEstimator);
+      counter = 0;
+    }
+  }
 
 
   @Override
