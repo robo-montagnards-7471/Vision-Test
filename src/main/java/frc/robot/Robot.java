@@ -16,7 +16,6 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.components.Controller;
 import frc.robot.components.DriveFrame;
 import frc.robot.data.StickPosition;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 import java.util.List;
 
