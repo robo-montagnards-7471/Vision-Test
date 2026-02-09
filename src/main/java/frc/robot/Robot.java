@@ -72,7 +72,7 @@ public class Robot extends TimedRobot {
     //  counter = 0;
     //}
 
-    
+    vision.periodic();
   }
 
 
