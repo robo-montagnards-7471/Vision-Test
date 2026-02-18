@@ -9,6 +9,8 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+
 import java.util.List;
 import java.util.Optional;
 import org.photonvision.EstimatedRobotPose;
@@ -35,7 +37,7 @@ public class Vision {
      */
     public Vision(EstimateConsumer estConsumer) {
         this.estConsumer = estConsumer;
-        camera = new PhotonCamera(kCameraName);
+        camera = new PhotonCamera("front-camera");
         photonEstimator = new PhotonPoseEstimator(kTagLayout, kRobotToCam);
 
         // ----- Simulation
@@ -103,12 +105,14 @@ public class Vision {
         if (estimatedPose.isEmpty()) {
             // No pose input. Default to single-tag std devs
             curStdDevs = kSingleTagStdDevs;
+            SmartDashboard.putString("vision", "no pose input");
 
         } else {
             // Pose present. Start running Heuristic
             var estStdDevs = kSingleTagStdDevs;
             int numTags = 0;
             double avgDist = 0;
+            SmartDashboard.putString("vision", "pose present");
 
             // Precalculation - see how many tags we found, and calculate an average-distance metric
             for (var tgt : targets) {

@@ -71,6 +71,7 @@ public class Robot extends TimedRobot {
       //SmartDashboard.putData(poseEstimator);
     //  counter = 0;
     //}
+    SmartDashboard.putString("My String","bonne fête keveun");
 
     vision.periodic();
   }
