@@ -65,6 +65,8 @@ public class Vision {
 
     public void periodic() {
         Optional<EstimatedRobotPose> visionEst = Optional.empty();
+        //SmartDashboard.putData("camera",camera);
+        SmartDashboard.putNumber("pipeline index",camera.getPipelineIndex());
         for (var result : camera.getAllUnreadResults()) {
             visionEst = photonEstimator.estimateCoprocMultiTagPose(result);
             if (visionEst.isEmpty()) {
