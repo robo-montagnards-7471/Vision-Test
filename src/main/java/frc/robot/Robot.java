@@ -53,7 +53,11 @@ public class Robot extends TimedRobot {
     controller = new Controller();
     driveFrame = new DriveFrame();
 
-    vision = new Vision(null);
+    vision = new Vision((pose, timestamp, stdDevs) -> {
+      SmartDashboard.putString("Vision Pose", pose.toString());
+      SmartDashboard.putNumber("Vision X", pose.getX());
+      SmartDashboard.putNumber("Vision Y", pose.getY());
+    });
   }
 
   //int counter = 0;
