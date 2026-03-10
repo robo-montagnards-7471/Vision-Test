@@ -20,6 +20,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.components.Controller;
 import frc.robot.components.DriveFrame;
 import frc.robot.data.StickPosition;
+import org.photonvision.PhotonCamera;
 
 import java.util.*;
 
@@ -37,6 +38,11 @@ public class Robot extends TimedRobot {
   private final Controller controller;
   private final DriveFrame driveFrame;
   private Vision vision;
+
+  @Override
+  public void robotInit() {
+    vision = new Vision(null);
+  }
 
   public static class Constants {
     public static final String kCameraName = "front-camera";
