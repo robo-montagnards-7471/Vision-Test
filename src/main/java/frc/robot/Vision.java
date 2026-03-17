@@ -38,7 +38,8 @@ public class Vision {
     public Vision(EstimateConsumer estConsumer) {
         this.estConsumer = estConsumer;
         camera = new PhotonCamera("front-camera");
-        photonEstimator = new PhotonPoseEstimator(kTagLayout, kRobotToCam);
+        photonEstimator = new PhotonPoseEstimator(kTagLayout, PhotonPoseEstimator.PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR, kRobotToCam);
+        photonEstimator.setMultiTagFallbackStrategy(PhotonPoseEstimator.PoseStrategy.LOWEST_AMBIGUITY);
 
         // ----- Simulation
         if (Robot.isSimulation()) {
@@ -69,30 +70,15 @@ public class Vision {
         //SmartDashboard.putData("camera",camera);
         SmartDashboard.putNumber("pipeline index",camera.getPipelineIndex());
         for (var result : camera.getAllUnreadResults()) {
-            visionEst = photonEstimator.estimateCoprocMultiTagPose(result);
-            if (visionEst.isEmpty()) {
-                visionEst = photonEstimator.estimateLowestAmbiguityPose(result);
-            }
+            visionEst = photonEstimator.update(result);
             updateEstimationStdDevs(visionEst, result.getTargets());
-
-            if (Robot.isSimulation()) {
-                visionEst.ifPresentOrElse(
-                        est ->
-                                getSimDebugField()
-                                        .getObject("VisionEstimation")
-                                        .setPose(est.estimatedPose.toPose2d()),
-                        () -> {
-                            getSimDebugField().getObject("VisionEstimation").setPoses();
-                        });
-            }
-
-            visionEst.ifPresent(
-                    est -> {
-                        // Change our trust in the measurement based on the tags we can see
-                        var estStdDevs = getEstimationStdDevs();
-
-                        estConsumer.accept(est.estimatedPose.toPose2d(), est.timestampSeconds, estStdDevs);
-                    });
+            visionEst.ifPresent(est -> {
+                estConsumer.accept(
+                    est.estimatedPose.toPose2d(),
+                    est.timestampSeconds,
+                    getEstimationStdDevs()
+                );
+            });
         }
     }
 
