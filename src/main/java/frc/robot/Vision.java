@@ -108,6 +108,15 @@ public class Vision {
             for (var tgt : targets) {
                 var tagPose = photonEstimator.getFieldTags().getTagPose(tgt.getFiducialId());
 
+                Pose3d pose = tagPose.get();
+                double x = pose.getTranslation().getX();
+                double y = pose.getTranslation().getY();
+                double z = pose.getTranslation().getZ();
+
+                SmartDashboard.putNumber("Estimate X", x);
+                SmartDashboard.putNumber("Estimate Y", y);
+                SmartDashboard.putNumber("Estimate Z", z);
+
                 if (tagPose.isEmpty()) continue;
                 numTags++;
                 avgDist +=
