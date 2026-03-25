@@ -8,6 +8,7 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
+import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
@@ -106,6 +107,16 @@ public class Vision {
             // Precalculation - see how many tags we found, and calculate an average-distance metric
             for (var tgt : targets) {
                 var tagPose = photonEstimator.getFieldTags().getTagPose(tgt.getFiducialId());
+
+                Pose3d pose = tagPose.get();
+                double x = pose.getTranslation().getX();
+                double y = pose.getTranslation().getY();
+                double z = pose.getTranslation().getZ();
+
+                SmartDashboard.putNumber("Estimate X", x);
+                SmartDashboard.putNumber("Estimate Y", y);
+                SmartDashboard.putNumber("Estimate Z", z);
+
                 if (tagPose.isEmpty()) continue;
                 numTags++;
                 avgDist +=
